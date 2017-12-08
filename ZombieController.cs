@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿
 using UnityEngine;
 public class ZombieController : MonoBehaviour {
 
@@ -8,24 +6,34 @@ public class ZombieController : MonoBehaviour {
     public float speed = 0.1F; // Enemy speed
     private Vector2 directionOfCharacter;
     private bool challenged = true;// If the enemy is Challenged to follow by the player
-    private ParticleSystem Blood;
+    
 
     public int move = 1;
     public Animator anim;
     private bool dead = false;
-    
-    
+    ParticleSystem Blood
+    {
+        get
+        {
+            if (_CachedSystem == null)
+                _CachedSystem = GetComponent<ParticleSystem>();
+            return _CachedSystem;
+        }
+    }
+
+    private ParticleSystem _CachedSystem;
+    public bool includeChildren = false;
     void Start()
     {
         anim = GetComponent<Animator>();
-        Character = (Transform) GameObject.Find("placeholderPlayer").GetComponent<Transform>();
-        Blood = (ParticleSystem) GameObject.Find("Zombie").GetComponent<ParticleSystem>();
+        Character = (Transform) GameObject.Find("player").GetComponent<Transform>();
+        
 
     }
     void Update()
     {
         
-       Die();
+       
         if (challenged)
         {
             directionOfCharacter = Character.transform.position - transform.position;
@@ -48,19 +56,23 @@ public class ZombieController : MonoBehaviour {
 
     }
 
-    int asd;
+    
     public void Die()
     {
-        if (transform.position == PlayerController.diepos)
-        {
-            Blood.Play();
+
+
+
+        var main = Blood.main;
+        main.playOnAwake = true;
             anim.Play("Die");
             dead = true;
+            PointSystem.points += 1;
             Debug.Log("Zombie is dead");
-            
+
             Destroy(GetComponent<PolygonCollider2D>());
 
-        }
+        
+      
     }
 // Will be triggered as soon as player would touch the Enemy Object
    
@@ -74,7 +86,7 @@ public class ZombieController : MonoBehaviour {
         {
             Debug.Log("Osuma oikea!!!!!!!");
 
-            PointSystem.health -= 1;
+            PointSystem.health -= 30;
 
             anim.Play("New State");
 
@@ -89,15 +101,8 @@ public class ZombieController : MonoBehaviour {
         }
 
     }
+
     
-    
-
-
-
-
-
-
-
 }
 
     

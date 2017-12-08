@@ -10,8 +10,15 @@ public class SettingController : MonoBehaviour
     private Text sounds;
     private Toggle soundToggle;
 	private Button backButton;
+    /// <summary>
+    /// 0 = easy, 1=hard 2=extreme
+    /// </summary>
     public static int Difficulty;
     private Dropdown difficultyDropdown;
+    /// <summary>
+    /// if true, sounds are on, else sounds are off (changable in settings)
+    /// </summary>
+    public static bool soundSettings = true;
 	// Use this for initialization
 	void Start () {
 	    
@@ -24,7 +31,8 @@ public class SettingController : MonoBehaviour
         difficultyDropdown.onValueChanged.AddListener(delegate { DifficultyDropdownValueChanged(difficultyDropdown); });
 	    difficultyDropdown.value = Difficulty;
 	    difficultyDropdown.RefreshShownValue();
-    }
+	    soundToggle.isOn = soundSettings;
+	}
 
     private void DifficultyDropdownValueChanged(Dropdown target)
     {
@@ -50,6 +58,7 @@ public class SettingController : MonoBehaviour
     }
     void SoundToggled(bool ison)
     {
+        soundSettings = ison;
         ReadSoundToggled(ison);
         if (ison == true)
         {
